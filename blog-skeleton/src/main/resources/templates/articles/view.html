@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${article.title} + ' - 博客系统'">文章详情</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light mb-4">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">博客系统</a>
+            <div>
+                <span th:if="${user != null}" class="navbar-text me-3" th:text="${user.username}"></span>
+                <a th:href="@{/logout}" class="btn btn-outline-secondary btn-sm">退出</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- 文章内容 -->
+                <div class="card">
+                    <div class="card-body">
+                        <!-- 文章标题 -->
+                        <h1 class="mb-3" th:text="${article.title}"></h1>
+                        
+                        <!-- 文章元信息 -->
+                        <div class="text-muted mb-4 pb-3 border-bottom">
+                            <div class="d-flex flex-wrap align-items-center">
+                                <div class="me-4">
+                                    <i class="bi bi-person"></i>
+                                    作者：<span th:text="${article.creator.username}"></span>
+                                </div>
+                                <div class="me-4">
+                                    <i class="bi bi-calendar"></i>
+                                    发布时间：<span th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+                                </div>
+                                <div>
+                                    <i class="bi bi-folder"></i>
+                                    分区：<a th:href="@{/articles(categoryId=${article.category.id})}" 
+                                          class="text-decoration-none">
+                                          <span th:text="${article.category.name}"></span>
+                                      </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 文章内容 -->
+                        <div class="article-content mb-4">
+                            <!-- 简单显示内容，如果需要Markdown渲染可以后期添加 -->
+                            <div style="white-space: pre-line; line-height: 1.8; font-size: 1.1rem;" 
+                                 th:text="${article.content}"></div>
+                        </div>
+                        
+                        <!-- 操作按钮 -->
+                        <div class="border-top pt-3">
+                            <a th:href="@{/articles(categoryId=${article.category.id})}" 
+                               class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> 返回文章列表
+                            </a>
+                            <!-- 删除按钮（仅管理员可见） -->
+                            <a th:if="${isAdmin}" 
+                               th:href="@{/articles/delete/{id}(id=${article.id})}"
+                               class="btn btn-outline-danger float-end"
+                               onclick="return confirm('确定要删除这篇文章吗？')">
+                                <i class="bi bi-trash"></i> 删除文章
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

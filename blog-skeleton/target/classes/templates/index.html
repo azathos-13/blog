@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Home - Blog Skeleton</title>
+</head>
+<body>
+  <h1>Welcome</h1>
+  <p>Current user: <strong th:text="${username}">Visitor</strong></p>
+  <p>Role: <strong th:text="${role}">NONE</strong></p>
+
+  <!-- ========== 只在这里添加必要的功能链接 ========== -->
+  <div style="margin-top: 30px;">
+    <h3>📚 文章功能</h3>
+    <ul>
+      <!-- 1. 浏览文章（所有人可见） -->
+      <li><a th:href="@{/articles}">浏览文章列表</a></li>
+      
+      <!-- 2. 写文章（嘉宾和管理员可见） -->
+      <li th:if="${role == 'GUEST' or role == 'ADMIN'}">
+        <a th:href="@{/articles/write}">写新文章</a>
+      </li>
+      
+      <!-- 3. 搜索文章（所有人可见） -->
+      <li><a th:href="@{/articles}">搜索文章</a>（在文章列表页面搜索）</li>
+    </ul>
+  </div>
+
+  <div th:if="${role != 'NONE'}">
+    <form th:action="@{/logout}" method="get">
+      <button type="submit">Logout</button>
+    </form>
+    
+    <div th:if="${role == 'ADMIN'}">
+      <hr>
+      <p><strong>管理员功能：</strong></p>
+      <ul>
+        <li><a th:href="@{/categories/manage}">📁 进入分区管理</a></li>
+        <!-- 文章管理功能在文章列表页面已有 -->
+      </ul>
+    </div>
+  </div>
+
+  <div th:if="${role == 'NONE'}">
+    <a th:href="@{/login}">Login</a>
+  </div>
+</body>
+</html>
